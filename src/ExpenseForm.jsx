@@ -12,7 +12,65 @@ export default function ExpenseForm({
 
     const [expenseWarning, setExpenseWarning] = useState(false);
     const [amountWarning, setAmountWarning] = useState(false);
+    const [formatWarning, setFormatWarning] = useState(false);
     const [expenseAmount, setExpenseAmount] = useState("");
+
+    const moneyRegex = /^\$?\d+(\.\d{0,2})?$/;
+
+    const resetForm = () => {
+        setShowDropdown(false);
+        setExpenseType({ value: "", label: "Select a category" });
+        setCustomExpense("");
+        setExpenseAmount("");
+    }
+
+    const formValidator = () => {
+
+        const formattedAmount = formatMoney(expenseAmount);
+
+        if (expenseType.value === "other") {
+            if (customExpense.trim() === "" && expenseAmount.trim() === "") {
+                setExpenseWarning(true); setAmountWarning(true);
+            } else if (customExpense.trim() === "" && !formattedAmount) {
+                setExpenseWarning(true); setFormatWarning(true);
+            } else if (customExpense.trim() === "") {
+                setExpenseWarning(true);
+            } else {
+                setExpenseArray([
+                    ...expenseArray,
+                    { value: customExpense, label: customExpense, amount: formattedAmount }
+                ]);
+                resetForm();
+            }
+        } else if (expenseType.value === "" && expenseAmount.trim() === "") {
+            setExpenseWarning(true);
+            setAmountWarning(true);
+        } else if (expenseType.value === "" && !formattedAmount) {
+            setExpenseWarning(true);
+            setFormatWarning(true);
+        } else if (expenseType.value === "") {
+            setExpenseWarning(true);
+        } else if (expenseAmount.trim() === "") {
+            setAmountWarning(true);
+        } else if (!formattedAmount) {
+            setFormatWarning(true);
+        } else {
+            setExpenseArray([
+                ...expenseArray,
+                { value: expenseType.value, label: expenseType.label, amount: formattedAmount }
+            ])
+            resetForm();
+        }
+    }
+
+    const formatMoney = (amount) => {
+        if (!amount) return null;
+        const clean = amount.replace(/^\$/, "");
+        if (!/^\d+(\.\d{1,2})?$/.test(clean)) {
+            return null;
+        }
+        return `$${Number(clean).toFixed(2)}`;
+    }
 
     return (
         <>
@@ -59,9 +117,13 @@ export default function ExpenseForm({
                         placeholder="$0.00"
                         value={expenseAmount}
                         onChange={(e) => {
-                            setExpenseAmount(e.target.value)
-                            if (expenseAmount.trim() !== "") {
+                            const value = e.target.value
+                            setExpenseAmount(value)
+                            if (value.trim() !== "") {
                                 setAmountWarning(false);
+                            }
+                            if (moneyRegex.test(value)) {
+                                setFormatWarning(false);
                             }
                         }} />
                     {expenseWarning === true && (
@@ -70,53 +132,24 @@ export default function ExpenseForm({
                     {amountWarning === true && (
                         <p className="text-red-600 font-semibold">Bro, enter an amount!!!</p>
                     )}
+                    {formatWarning === true && (
+                        <p className="text-red-600 font-semibold">Bro, that's an invalid format!!!</p>
+                    )}
                     <div className="flex gap-4">
                         <button
                             className="bg-blue-400 rounded py-2 px-4 cursor-pointer"
                             onClick={() => {
-                                if (expenseType.value === "other") {
-                                    customExpense.trim() === "" && expenseAmount.trim() === "" ? (
-                                        setExpenseWarning(true), setAmountWarning(true)
-                                    ) : customExpense.trim() === "" ? (
-                                        setExpenseWarning(true)
-                                    ) : (
-                                        setExpenseArray([
-                                            ...expenseArray,
-                                            { value: customExpense, label: customExpense, amount: expenseAmount }
-                                        ]),
-                                        setShowDropdown(false),
-                                        setExpenseType({ value: "", label: "Select a category" }),
-                                        setCustomExpense(""),
-                                        setExpenseAmount(""))
-                                } else if (expenseType.value === "" && expenseAmount.trim() === "") {
-                                    setExpenseWarning(true);
-                                    setAmountWarning(true);
-                                } else if (expenseType.value === "") {
-                                    setExpenseWarning(true);
-                                } else if (expenseAmount.trim() === "") {
-                                    setAmountWarning(true);
-                                } else {
-                                    setExpenseArray([
-                                        ...expenseArray,
-                                        { value: expenseType.value, label: expenseType.label, amount: expenseAmount }
-                                    ])
-                                    setShowDropdown(false);
-                                    setExpenseType({ value: "", label: "Select a category" });
-                                    setCustomExpense("");
-                                    setExpenseAmount("");
-                                }
+                                formValidator();
                             }}>
                             Confirm
                         </button>
                         <button
                             className="bg-red-400 rounded py-2 px-4 cursor-pointer"
                             onClick={() => {
-                                setShowDropdown(false);
-                                setExpenseType({ value: "", label: "Select a category:" });
-                                setCustomExpense("")
-                                setExpenseAmount("")
+                                resetForm();
                                 setExpenseWarning(false);
                                 setAmountWarning(false);
+                                setFormatWarning(false);
                             }}>
                             Cancel
                         </button>
