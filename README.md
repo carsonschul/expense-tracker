@@ -1,12 +1,44 @@
-# React + Vite
+# Expense Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple React application to track expenses and budgets. Built with **React** and **Tailwind CSS** as part of my journey learning modern front-end development.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Live Demo
+👉 [Check it out on Netlify](https://your-app.netlify.app)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Features
+- Add expenses by category or as a custom expense  
+- View all expenses in a clean, card-style list  
+- Add a budget amount (basic functionality implemented)  
+- Delete expenses and reset budget  
+- Conditional UI (welcome message, forms, etc.) managed with React state  
+
+---
+
+## 🛠️ Tech Stack
+- **React** (Vite)  
+- **Tailwind CSS** for styling  
+
+---
+
+## 📌 Notes
+- Budget form currently returns to home when no input or invalid input is given (improvements planned).  
+- Input validation is in progress (decimal precision, non-negative amounts, etc.).  
+- Features like editing expenses, saving to a backend, and better validation will be added in future iterations.  
+
+---
+
+## 📅 Roadmap
+- [ ] Improved validation for budget and expense inputs  
+- [ ] Edit existing expenses  
+- [ ] Persistent storage (localStorage or backend API)  
+- [ ] Responsive design polish  
+- [ ] Charts/visualizations for budget vs. expenses  
+
+---
+
+## 📂 Project Status
+This project is **in development** — new features and refinements are being added regularly.
