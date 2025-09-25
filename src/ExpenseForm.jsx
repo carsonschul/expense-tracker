@@ -1,7 +1,7 @@
 import { useState } from 'react';
 export default function ExpenseForm({
-    showDropdown,
-    setShowDropdown,
+    view,
+    setView,
     expenseType,
     setExpenseType,
     expenseArray,
@@ -10,8 +10,6 @@ export default function ExpenseForm({
     customExpense,
     setCustomExpense,
     setShowWelcome,
-    showBudgetForm,
-    setShowBudgetForm,
     budgetInput,
     setBudgetInput,
     setBudget
@@ -22,10 +20,8 @@ export default function ExpenseForm({
     const [formatWarning, setFormatWarning] = useState(false);
     const [expenseAmount, setExpenseAmount] = useState("");
 
-    const moneyRegex = /^\$?\d+(\.\d{0,2})?$/;
-
     const resetForm = () => {
-        setShowDropdown(false);
+        setView("home");
         setExpenseType({ value: "", label: "Select a category" });
         setCustomExpense("");
         setExpenseAmount("");
@@ -71,18 +67,21 @@ export default function ExpenseForm({
     }
 
     const formatMoney = (amount) => {
-        if (amount.trim() === "") return null;
-        const clean = amount.replace(/^\$/, "");
-        if (!/^\d+(\.\d{1,2})?$/.test(clean)) {
+        if (!amount) return null;
+        const value = parseFloat(amount);
+        if (isNaN(value) || value < 0) return null;
+        const parts = amount.split(".");
+        if (parts.length > 1 && parts[1].length > 2) {
             return null;
         }
-        return `$${Number(clean).toFixed(2)}`;
+        return `$${value.toFixed(2)}`;
     }
 
     return (
         <>
-            {showDropdown && (
+            {view === "expense-form" && (
                 <div className="my-auto flex flex-col items-center justify-center gap-4">
+                    <p className="text-center">Choose an expense type and enter the cost of each expense. Make sure to only enter a plain number with two decimal places (no $ or negative numbers).</p>
                     <label
                         htmlFor="expense-type"
                         className="text-center">
@@ -120,8 +119,11 @@ export default function ExpenseForm({
                     <label htmlFor="expense-amount">Expense Amount:</label>
                     <input
                         id="expense-amount"
+                        type="number"
+                        step="0.01"
+                        min="0"
                         className="bg-white rounded min-w-0 py-1 px-2"
-                        placeholder="$0.00"
+                        placeholder="0.00"
                         value={expenseAmount}
                         onChange={(e) => {
                             const value = e.target.value
@@ -129,7 +131,7 @@ export default function ExpenseForm({
                             if (value.trim() !== "") {
                                 setAmountWarning(false);
                             }
-                            if (moneyRegex.test(value)) {
+                            if (!isNaN(parseFloat(value))) {
                                 setFormatWarning(false);
                             }
                         }} />
@@ -165,26 +167,46 @@ export default function ExpenseForm({
                 </div>
             )
             }
-            {showBudgetForm && (
+            {view === "budget-form" && (
                 <div className="flex flex-col gap-4 items-center justify-center m-auto">
                     <div className="flex gap-4 items-center">
                         <label htmlFor="budget-input">Enter your budget:</label>
                         <input
                             id="budget-input"
+                            type="number"
+                            step="0.01"
+                            min="0"
                             className="bg-white rounded min-w-0 py-1 px-2"
                             placeholder="$0.00"
                             value={budgetInput}
-                            onChange={e => setBudgetInput(e.target.value)} />
+                            onChange={e => {
+                                const value = e.target.value
+                                setBudgetInput(value)
+                                if (value.trim() !== "") {
+                                    setAmountWarning(false);
+                                }
+                                if (!isNaN(parseFloat(value))) {
+                                    setFormatWarning(false);
+                                }
+                            }} />
                     </div>
                     <div className="flex gap-4 items-center">
                         <button
                             className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer"
-                            onClick={() => { setBudget(budgetInput); setShowWelcome(false); setShowBudgetForm(false); setBudgetInput(""); }}>
+                            onClick={() => {
+                                console.log("Budget Input: ", budgetInput);
+                                const formattedBudget = formatMoney(budgetInput);
+                                console.log("Formatted Budget: ", formattedBudget);
+                                setBudget(formattedBudget);
+                                setShowWelcome(false);
+                                setView("home");
+                                setBudgetInput("");
+                            }}>
                             Confirm
                         </button>
                         <button
                             className="bg-red-400 rounded py-2 px-4 shadow cursor-pointer"
-                            onClick={() => { setShowBudgetForm(false); setBudgetInput(""); }}>
+                            onClick={() => { setView("home"); setBudgetInput(""); }}>
                             Cancel
                         </button>
                     </div>

@@ -1,7 +1,7 @@
-export default function ExpenseArray({ expenseArray, setExpenseArray, showWelcome, showDropdown, showBudgetForm }) {
+export default function ExpenseArray({ expenseArray, setExpenseArray, showWelcome, view }) {
     return (
         <div>
-            {(!showWelcome && !showDropdown && !showBudgetForm) && (
+            {(!showWelcome && view === "home") && (
                 <div className="flex flex-col">
                     {expenseArray.length > 0 && (
                         <ul>
