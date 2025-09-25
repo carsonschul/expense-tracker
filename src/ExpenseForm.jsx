@@ -8,7 +8,14 @@ export default function ExpenseForm({
     setExpenseArray,
     expenseOptions,
     customExpense,
-    setCustomExpense }) {
+    setCustomExpense,
+    setShowWelcome,
+    showBudgetForm,
+    setShowBudgetForm,
+    budgetInput,
+    setBudgetInput,
+    setBudget
+}) {
 
     const [expenseWarning, setExpenseWarning] = useState(false);
     const [amountWarning, setAmountWarning] = useState(false);
@@ -64,7 +71,7 @@ export default function ExpenseForm({
     }
 
     const formatMoney = (amount) => {
-        if (!amount) return null;
+        if (amount.trim() === "") return null;
         const clean = amount.replace(/^\$/, "");
         if (!/^\d+(\.\d{1,2})?$/.test(clean)) {
             return null;
@@ -140,6 +147,7 @@ export default function ExpenseForm({
                             className="bg-blue-400 rounded py-2 px-4 cursor-pointer"
                             onClick={() => {
                                 formValidator();
+                                setShowWelcome(false);
                             }}>
                             Confirm
                         </button>
@@ -154,9 +162,34 @@ export default function ExpenseForm({
                             Cancel
                         </button>
                     </div>
-                </div >
+                </div>
             )
             }
+            {showBudgetForm && (
+                <div className="flex flex-col gap-4 items-center justify-center m-auto">
+                    <div className="flex gap-4 items-center">
+                        <label htmlFor="budget-input">Enter your budget:</label>
+                        <input
+                            id="budget-input"
+                            className="bg-white rounded min-w-0 py-1 px-2"
+                            placeholder="$0.00"
+                            value={budgetInput}
+                            onChange={e => setBudgetInput(e.target.value)} />
+                    </div>
+                    <div className="flex gap-4 items-center">
+                        <button
+                            className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer"
+                            onClick={() => { setBudget(budgetInput); setShowWelcome(false); setShowBudgetForm(false); setBudgetInput(""); }}>
+                            Confirm
+                        </button>
+                        <button
+                            className="bg-red-400 rounded py-2 px-4 shadow cursor-pointer"
+                            onClick={() => { setShowBudgetForm(false); setBudgetInput(""); }}>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

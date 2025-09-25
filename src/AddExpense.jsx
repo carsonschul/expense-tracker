@@ -1,9 +1,9 @@
-export default function AddExpense({ showDropdown, setShowDropdown }) {
+export default function AddExpense({ showDropdown, setShowDropdown, showBudgetForm }) {
     return (
         <>
-            {!showDropdown && (
+            {(!showDropdown && !showBudgetForm) && (
                 <button
-                    className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer mt-auto"
+                    className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer mt-2"
                     onClick={() => { setShowDropdown(true); }}>
                     Add Expense
                 </button>
