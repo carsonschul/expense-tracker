@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './index.css'
 import ExpenseArray from './ExpenseArray.jsx';
-import ExpenseForm from './ExpenseForm.jsx';
+import Forms from './Forms.jsx';
 import Header from './Header.jsx';
 import WelcomeMessage from './WelcomeMessage.jsx';
 import BudgetValue from './BudgetValue.jsx';
@@ -47,7 +47,7 @@ function App() {
           setBudget={setBudget}
           showWelcome={showWelcome}
           view={view} />
-        <ExpenseForm
+        <Forms
           view={view}
           setView={setView}
           expenseType={expenseType}
@@ -60,16 +60,19 @@ function App() {
           setShowWelcome={setShowWelcome}
           budgetInput={budgetInput}
           setBudgetInput={setBudgetInput}
-          setBudget={setBudget} />
+          setBudget={setBudget}
+        />
         <div className="flex flex-col mt-auto">
           <BudgetValue
             budget={budget}
-            setBudget={setBudget} />
+            setBudget={setBudget}
+            view={view} />
           <Buttons
             view={view}
             setView={setView}
             showWelcome={showWelcome}
-            setShowWelcome={setShowWelcome} />
+            setShowWelcome={setShowWelcome}
+            budget={budget} />
         </div>
       </div >
     </div >

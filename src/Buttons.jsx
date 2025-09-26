@@ -1,4 +1,4 @@
-export default function Buttons({ view, setView, showWelcome, setShowWelcome, }) {
+export default function Buttons({ view, setView, showWelcome, setShowWelcome, budget }) {
     return (
         <>
             {(view === "home") && (
@@ -9,10 +9,10 @@ export default function Buttons({ view, setView, showWelcome, setShowWelcome, })
                 </button>
             )}
             {
-                (view === "home") && (
+                view === "home" && (
                     <button
                         className="bg-green-400 rounded py-2 px-4 shadow cursor-pointer mt-2"
-                        onClick={() => { setView("budget-form"); setShowWelcome(false); }}>
+                        onClick={() => { setView("budget-form"); }}>
                         Add Budget
                     </button>
                 )

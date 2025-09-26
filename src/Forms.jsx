@@ -22,48 +22,9 @@ export default function ExpenseForm({
 
     const resetForm = () => {
         setView("home");
-        setExpenseType({ value: "", label: "Select a category" });
+        setExpenseType({ value: "", label: "Select a category:" });
         setCustomExpense("");
         setExpenseAmount("");
-    }
-
-    const formValidator = () => {
-
-        const formattedAmount = formatMoney(expenseAmount);
-
-        if (expenseType.value === "other") {
-            if (customExpense.trim() === "" && expenseAmount.trim() === "") {
-                setExpenseWarning(true); setAmountWarning(true);
-            } else if (customExpense.trim() === "" && !formattedAmount) {
-                setExpenseWarning(true); setFormatWarning(true);
-            } else if (customExpense.trim() === "") {
-                setExpenseWarning(true);
-            } else {
-                setExpenseArray([
-                    ...expenseArray,
-                    { value: customExpense, label: customExpense, amount: formattedAmount }
-                ]);
-                resetForm();
-            }
-        } else if (expenseType.value === "" && expenseAmount.trim() === "") {
-            setExpenseWarning(true);
-            setAmountWarning(true);
-        } else if (expenseType.value === "" && !formattedAmount) {
-            setExpenseWarning(true);
-            setFormatWarning(true);
-        } else if (expenseType.value === "") {
-            setExpenseWarning(true);
-        } else if (expenseAmount.trim() === "") {
-            setAmountWarning(true);
-        } else if (!formattedAmount) {
-            setFormatWarning(true);
-        } else {
-            setExpenseArray([
-                ...expenseArray,
-                { value: expenseType.value, label: expenseType.label, amount: formattedAmount }
-            ])
-            resetForm();
-        }
     }
 
     const formatMoney = (amount) => {
@@ -77,11 +38,76 @@ export default function ExpenseForm({
         return `$${value.toFixed(2)}`;
     }
 
+    const expenseFormValidator = () => {
+
+        let hasError = false;
+
+        if (expenseType.value === "other") {
+            if (!customExpense.trim()) {
+                setExpenseWarning(true);
+                hasError = true;
+            }
+        } else {
+            if (!expenseType.value.trim()) {
+                setExpenseWarning(true);
+                hasError = true;
+            }
+        }
+
+
+        if (!expenseAmount.trim()) {
+            setAmountWarning(true);
+            return;
+        }
+
+        const formattedAmount = formatMoney(expenseAmount);
+        if (!formattedAmount) {
+            setFormatWarning(true);
+            return;
+        }
+
+        if (hasError) return;
+
+        setExpenseArray([
+            ...expenseArray,
+            {
+                value:
+                    expenseType.value === "other" ? customExpense : expenseType.value,
+                label:
+                    expenseType.value === "other" ? customExpense : expenseType.label,
+                amount: formattedAmount,
+            },
+        ]);
+        resetForm();
+    };
+
+    const displayWarnings = () => {
+        return (
+            <>
+                {
+                    expenseWarning === true && (
+                        <p className="text-red-600 font-semibold">Bro, choose an expense!!!</p>
+                    )
+                }
+                {
+                    amountWarning === true && (
+                        <p className="text-red-600 font-semibold">Bro, enter an amount!!!</p>
+                    )
+                }
+                {
+                    formatWarning === true && (
+                        <p className="text-red-600 font-semibold">Bro, that's an invalid format!!!</p>
+                    )
+                }
+            </>
+        )
+    }
+
     return (
         <>
             {view === "expense-form" && (
                 <div className="my-auto flex flex-col items-center justify-center gap-4">
-                    <p className="text-center">Choose an expense type and enter the cost of each expense. Make sure to only enter a plain number with two decimal places (no $ or negative numbers).</p>
+                    <p className="text-center">Choose an expense type and enter the cost of each expense. Make sure to only enter a plain number with a maximum of two decimal places (no $ or negative numbers).</p>
                     <label
                         htmlFor="expense-type"
                         className="text-center">
@@ -113,7 +139,13 @@ export default function ExpenseForm({
                                 placeholder="Banana"
                                 className="bg-white rounded min-w-0 py-1 px-2"
                                 value={customExpense}
-                                onChange={e => setCustomExpense(e.target.value)} />
+                                onChange={e => {
+                                    const value = e.target.value;
+                                    setCustomExpense(value);
+                                    if (value.trim() !== "") {
+                                        setExpenseWarning(false);
+                                    }
+                                }} />
                         </>
                     )}
                     <label htmlFor="expense-amount">Expense Amount:</label>
@@ -135,20 +167,12 @@ export default function ExpenseForm({
                                 setFormatWarning(false);
                             }
                         }} />
-                    {expenseWarning === true && (
-                        <p className="text-red-600 font-semibold">Bro, choose an expense!!!</p>
-                    )}
-                    {amountWarning === true && (
-                        <p className="text-red-600 font-semibold">Bro, enter an amount!!!</p>
-                    )}
-                    {formatWarning === true && (
-                        <p className="text-red-600 font-semibold">Bro, that's an invalid format!!!</p>
-                    )}
+                    {displayWarnings()}
                     <div className="flex gap-4">
                         <button
                             className="bg-blue-400 rounded py-2 px-4 cursor-pointer"
                             onClick={() => {
-                                formValidator();
+                                expenseFormValidator();
                                 setShowWelcome(false);
                             }}>
                             Confirm
@@ -169,6 +193,7 @@ export default function ExpenseForm({
             }
             {view === "budget-form" && (
                 <div className="flex flex-col gap-4 items-center justify-center m-auto">
+                    <p className="text-center">Enter your budget. Make sure to only enter a plain number with a maximum two decimal places (no $ or negative numbers).</p>
                     <div className="flex gap-4 items-center">
                         <label htmlFor="budget-input">Enter your budget:</label>
                         <input
@@ -177,7 +202,7 @@ export default function ExpenseForm({
                             step="0.01"
                             min="0"
                             className="bg-white rounded min-w-0 py-1 px-2"
-                            placeholder="$0.00"
+                            placeholder="0.00"
                             value={budgetInput}
                             onChange={e => {
                                 const value = e.target.value
@@ -190,23 +215,35 @@ export default function ExpenseForm({
                                 }
                             }} />
                     </div>
+                    {displayWarnings()}
                     <div className="flex gap-4 items-center">
                         <button
                             className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer"
                             onClick={() => {
-                                console.log("Budget Input: ", budgetInput);
-                                const formattedBudget = formatMoney(budgetInput);
-                                console.log("Formatted Budget: ", formattedBudget);
-                                setBudget(formattedBudget);
-                                setShowWelcome(false);
-                                setView("home");
-                                setBudgetInput("");
+                                if (!budgetInput.trim()) {
+                                    return setAmountWarning(true);
+                                } else {
+                                    const formattedBudget = formatMoney(budgetInput);
+                                    if (!formattedBudget) {
+                                        return setFormatWarning(true);
+                                    } else {
+                                        setBudget(formattedBudget);
+                                        setShowWelcome(false);
+                                        setView("home");
+                                        setBudgetInput("");
+                                    }
+                                }
                             }}>
                             Confirm
                         </button>
                         <button
                             className="bg-red-400 rounded py-2 px-4 shadow cursor-pointer"
-                            onClick={() => { setView("home"); setBudgetInput(""); }}>
+                            onClick={() => {
+                                setView("home");
+                                setBudgetInput("");
+                                setAmountWarning(false);
+                                setFormatWarning(false);
+                            }}>
                             Cancel
                         </button>
                     </div>

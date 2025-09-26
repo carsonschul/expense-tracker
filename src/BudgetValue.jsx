@@ -1,7 +1,7 @@
-export default function BudgetValue({ budget, setBudget }) {
+export default function BudgetValue({ budget, setBudget, view }) {
     return (
         <>
-            {budget && (
+            {(budget && view === "home") && (
                 <div className="flex flex-row gap-4 items-center">
                     <p>Budget: {budget}</p>
                     <button
