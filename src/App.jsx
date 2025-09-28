@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './index.css'
-import ExpenseArray from './ExpenseArray.jsx';
+import ExpenseList from './ExpenseList.jsx';
 import Forms from './Forms.jsx';
 import Header from './Header.jsx';
 import WelcomeMessage from './WelcomeMessage.jsx';
@@ -16,6 +16,9 @@ function App() {
   const [budgetInput, setBudgetInput] = useState("");
   const [budget, setBudget] = useState("");
   const [view, setView] = useState("home");
+  const [expenseWarning, setExpenseWarning] = useState(false);
+  const [amountWarning, setAmountWarning] = useState(false);
+  const [formatWarning, setFormatWarning] = useState(false);
 
   const expenseOptions = [
     { value: "", label: "Select a category:" },
@@ -40,13 +43,19 @@ function App() {
         <WelcomeMessage
           showWelcome={showWelcome}
           view={view} />
-        <ExpenseArray
+        <ExpenseList
           expenseArray={expenseArray}
           setExpenseArray={setExpenseArray}
           budget={budget}
           setBudget={setBudget}
           showWelcome={showWelcome}
-          view={view} />
+          view={view}
+          expenseWarning={expenseWarning}
+          setExpenseWarning={setExpenseWarning}
+          amountWarning={amountWarning}
+          setAmountWarning={setAmountWarning}
+          formatWarning={formatWarning}
+          setFormatWarning={setFormatWarning} />
         <Forms
           view={view}
           setView={setView}
@@ -61,6 +70,12 @@ function App() {
           budgetInput={budgetInput}
           setBudgetInput={setBudgetInput}
           setBudget={setBudget}
+          expenseWarning={expenseWarning}
+          setExpenseWarning={setExpenseWarning}
+          amountWarning={amountWarning}
+          setAmountWarning={setAmountWarning}
+          formatWarning={formatWarning}
+          setFormatWarning={setFormatWarning}
         />
         <div className="flex flex-col mt-auto">
           <BudgetValue

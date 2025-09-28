@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import formatMoney from './FormatMoney.js'
+import DisplayWarnings from './DisplayWarnings.jsx'
 export default function ExpenseForm({
     view,
     setView,
@@ -12,12 +14,15 @@ export default function ExpenseForm({
     setShowWelcome,
     budgetInput,
     setBudgetInput,
-    setBudget
+    setBudget,
+    expenseWarning,
+    setExpenseWarning,
+    amountWarning,
+    setAmountWarning,
+    formatWarning,
+    setFormatWarning
 }) {
 
-    const [expenseWarning, setExpenseWarning] = useState(false);
-    const [amountWarning, setAmountWarning] = useState(false);
-    const [formatWarning, setFormatWarning] = useState(false);
     const [expenseAmount, setExpenseAmount] = useState("");
 
     const resetForm = () => {
@@ -25,17 +30,6 @@ export default function ExpenseForm({
         setExpenseType({ value: "", label: "Select a category:" });
         setCustomExpense("");
         setExpenseAmount("");
-    }
-
-    const formatMoney = (amount) => {
-        if (!amount) return null;
-        const value = parseFloat(amount);
-        if (isNaN(value) || value < 0) return null;
-        const parts = amount.split(".");
-        if (parts.length > 1 && parts[1].length > 2) {
-            return null;
-        }
-        return `$${value.toFixed(2)}`;
     }
 
     const expenseFormValidator = () => {
@@ -80,28 +74,6 @@ export default function ExpenseForm({
         ]);
         resetForm();
     };
-
-    const displayWarnings = () => {
-        return (
-            <>
-                {
-                    expenseWarning === true && (
-                        <p className="text-red-600 font-semibold">Bro, choose an expense!!!</p>
-                    )
-                }
-                {
-                    amountWarning === true && (
-                        <p className="text-red-600 font-semibold">Bro, enter an amount!!!</p>
-                    )
-                }
-                {
-                    formatWarning === true && (
-                        <p className="text-red-600 font-semibold">Bro, that's an invalid format!!!</p>
-                    )
-                }
-            </>
-        )
-    }
 
     return (
         <>
@@ -167,7 +139,10 @@ export default function ExpenseForm({
                                 setFormatWarning(false);
                             }
                         }} />
-                    {displayWarnings()}
+                    <DisplayWarnings
+                        expenseWarning={expenseWarning}
+                        amountWarning={amountWarning}
+                        formatWarning={formatWarning} />
                     <div className="flex gap-4">
                         <button
                             className="bg-blue-400 rounded py-2 px-4 cursor-pointer"
@@ -215,7 +190,10 @@ export default function ExpenseForm({
                                 }
                             }} />
                     </div>
-                    {displayWarnings()}
+                    <DisplayWarnings
+                        expenseWarning={expenseWarning}
+                        amountWarning={amountWarning}
+                        formatWarning={formatWarning} />
                     <div className="flex gap-4 items-center">
                         <button
                             className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer"
