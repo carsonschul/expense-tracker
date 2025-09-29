@@ -12,15 +12,17 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
     })
 
     return (
-        <div>
+        <>
             {(!showWelcome && view === "home") && (
-                <div>
+                <div className="flex flex-col flex-grow overflow-y-auto bg-gray-500 p-4 mb-4 rounded">
                     {expenseArray.length > 0 && (
-                        <ul>
+                        <ul className="flex flex-col">
                             {expenseArray.map((expense, i) => (
                                 <li
                                     key={i}
-                                    className="flex gap-4 items-end w-full">
+                                    className={`flex flex-wrap gap-4 w-full mb-2 ${editingIndex === i ? "items-end" : "items-center"
+                                        }`}
+                                >
                                     {editingIndex !== i ? (
                                         <>
                                             <span>{expense.label}</span>
@@ -33,27 +35,42 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
                                                 <input
                                                     id="expense-input"
                                                     type="text"
-                                                    className="bg-white rounded py-1 px-2"
+                                                    className="bg-white rounded py-1 px-2 mt-2"
                                                     placeholder="Banana"
                                                     value={editValues.label}
-                                                    onChange={e => setEditValues(prev => ({
-                                                        ...prev,
-                                                        value: e.target.value.toLowerCase(),
-                                                        label: e.target.value
-                                                    }))} />
+                                                    onChange={e => {
+                                                        const value = e.target.value
+                                                        setEditValues(prev => ({
+                                                            ...prev,
+                                                            value: value.toLowerCase(),
+                                                            label: value
+                                                        }));
+                                                        if (value.trim() !== "") {
+                                                            setExpenseWarning(false);
+                                                        }
+                                                    }} />
                                             </div>
                                             <div className="flex flex-col min-w-0">
                                                 <label htmlFor="amount-input">Amount:</label>
                                                 <input
                                                     id="amount-input"
                                                     type="number"
-                                                    className="bg-white rounded py-1 px-2"
+                                                    className="bg-white rounded py-1 px-2 mt-2"
                                                     placeholder="0.00"
                                                     value={editValues.amount}
-                                                    onChange={e => setEditValues(prev => ({
-                                                        ...prev,
-                                                        amount: e.target.value
-                                                    }))} />
+                                                    onChange={e => {
+                                                        const value = e.target.value
+                                                        setEditValues(prev => ({
+                                                            ...prev,
+                                                            amount: value
+                                                        }));
+                                                        if (value.trim() !== "") {
+                                                            setAmountWarning(false);
+                                                        }
+                                                        if (!isNaN(parseFloat(value)) || value.trim() == "") {
+                                                            setFormatWarning(false);
+                                                        }
+                                                    }} />
                                             </div>
                                         </div>
                                     }
@@ -83,14 +100,13 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
                                                         isError = true;
                                                     }
                                                     if (!editValues.amount.trim()) {
-                                                        setAmountWarning(true);
-                                                        isError = true;
+                                                        return setAmountWarning(true);
                                                     }
-                                                    if (isError) return;
                                                     const formattedAmount = formatMoney(editValues.amount)
                                                     if (!formattedAmount) {
                                                         return setFormatWarning(true);
                                                     }
+                                                    if (isError) return;
                                                     setExpenseArray(prev =>
                                                         prev.map((expense, index) =>
                                                             index === i ?
@@ -137,13 +153,15 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
                 </div>
             )
             }
-            <div className="pt-2">
-                <DisplayWarnings
-                    expenseWarning={expenseWarning}
-                    amountWarning={amountWarning}
-                    formatWarning={formatWarning} />
+            {view === "home" && (
+                <div className="pt-2">
+                    <DisplayWarnings
+                        expenseWarning={expenseWarning}
+                        amountWarning={amountWarning}
+                        formatWarning={formatWarning} />
 
-            </div>
-        </div>
+                </div>
+            )}
+        </>
     );
 }

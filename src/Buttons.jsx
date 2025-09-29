@@ -3,7 +3,7 @@ export default function Buttons({ view, setView, showWelcome, setShowWelcome, bu
         <>
             {(view === "home") && (
                 <button
-                    className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer mt-2"
+                    className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer mt-4"
                     onClick={() => { setView("expense-form"); }}>
                     Add Expense
                 </button>

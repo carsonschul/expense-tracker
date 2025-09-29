@@ -62,8 +62,8 @@ export default function ExpenseForm({
 
         if (hasError) return;
 
-        setExpenseArray([
-            ...expenseArray,
+        setExpenseArray(prev => [
+            ...prev,
             {
                 value:
                     expenseType.value === "other" ? customExpense : expenseType.value,
@@ -135,7 +135,7 @@ export default function ExpenseForm({
                             if (value.trim() !== "") {
                                 setAmountWarning(false);
                             }
-                            if (!isNaN(parseFloat(value))) {
+                            if (!isNaN(parseFloat(value)) || value.trim() == "") {
                                 setFormatWarning(false);
                             }
                         }} />
