@@ -78,74 +78,77 @@ export default function ExpenseForm({
     return (
         <>
             {view === "expense-form" && (
-                <div className="my-auto flex flex-col items-center justify-center gap-4">
-                    <p className="text-center">Choose an expense type and enter the cost of each expense. Make sure to only enter a plain number with a maximum of two decimal places (no $ or negative numbers).</p>
-                    <label
-                        htmlFor="expense-type"
-                        className="text-center">
-                        Expense Type:
-                    </label>
-                    <select
-                        id="expense-type"
-                        className="bg-white min-w-0 rounded py-1 px-2"
-                        value={expenseType.value}
-                        onChange={e => {
-                            const option = expenseOptions.find(opt => opt.value === e.target.value);
-                            setExpenseType(option);
-                            setExpenseWarning(false);
-                        }}>
-                        {expenseOptions.map(option => {
-                            const value = option.value;
-                            const label = option.label;
-                            return (
-                                <option key={value} value={value}>{label}</option>
-                            )
-                        })}
-                    </select>
-                    {expenseType.value === "other" && (
-                        <>
-                            <label htmlFor="other-input">Custom Expense:</label>
-                            <input
-                                id="other-input"
-                                type="text"
-                                placeholder="Banana"
-                                className="bg-white rounded min-w-0 py-1 px-2"
-                                value={customExpense}
-                                onChange={e => {
-                                    const value = e.target.value;
-                                    setCustomExpense(value);
-                                    if (value.trim() !== "") {
-                                        setExpenseWarning(false);
-                                    }
-                                }} />
-                        </>
-                    )}
-                    <label htmlFor="expense-amount">Expense Amount:</label>
-                    <input
-                        id="expense-amount"
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        className="bg-white rounded min-w-0 py-1 px-2"
-                        placeholder="0.00"
-                        value={expenseAmount}
-                        onChange={(e) => {
-                            const value = e.target.value
-                            setExpenseAmount(value)
-                            if (value.trim() !== "") {
-                                setAmountWarning(false);
-                            }
-                            if (!isNaN(parseFloat(value)) || value.trim() == "") {
-                                setFormatWarning(false);
-                            }
-                        }} />
-                    <DisplayWarnings
-                        expenseWarning={expenseWarning}
-                        amountWarning={amountWarning}
-                        formatWarning={formatWarning} />
-                    <div className="flex gap-4">
+                <div className="flex flex-col flex-grow h-full w-full items-center">
+                    <div className="flex flex-col gap-4 bg-gray-500 w-full h-full my-4 rounded p-4 justify-center items-center">
+                        <label
+                            htmlFor="expense-type"
+                            className="text-center text-xl text-white">
+                            Expense Type:
+                        </label>
+                        <select
+                            id="expense-type"
+                            className="bg-white w-3/4 sm:w-1/2 rounded py-2 px-4 text-xl"
+                            value={expenseType.value}
+                            onChange={e => {
+                                const option = expenseOptions.find(opt => opt.value === e.target.value);
+                                setExpenseType(option);
+                                setExpenseWarning(false);
+                            }}>
+                            {expenseOptions.map(option => {
+                                const value = option.value;
+                                const label = option.label;
+                                return (
+                                    <option key={value} value={value}>{label}</option>
+                                )
+                            })}
+                        </select>
+                        {expenseType.value === "other" && (
+                            <>
+                                <label className="text-xl text-center text-white" htmlFor="other-input">Custom Expense:</label>
+                                <input
+                                    id="other-input"
+                                    type="text"
+                                    placeholder="Banana"
+                                    className="bg-white rounded w-3/4 sm:w-1/2 py-2 px-4 text-xl"
+                                    value={customExpense}
+                                    onChange={e => {
+                                        const value = e.target.value;
+                                        setCustomExpense(value);
+                                        if (value.trim() !== "") {
+                                            setExpenseWarning(false);
+                                        }
+                                    }} />
+                            </>
+                        )}
+                        <label className="text-xl text-center text-white" htmlFor="expense-amount">Expense Amount:</label>
+                        <input
+                            id="expense-amount"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            className="bg-white rounded w-3/4 sm:w-1/2 py-2 px-4 text-xl"
+                            placeholder="0.00"
+                            value={expenseAmount}
+                            onChange={(e) => {
+                                const value = e.target.value
+                                setExpenseAmount(value)
+                                if (value.trim() !== "") {
+                                    setAmountWarning(false);
+                                }
+                                if (!isNaN(parseFloat(value)) || value.trim() == "") {
+                                    setFormatWarning(false);
+                                }
+                            }} />
+                    </div>
+                    <div>
+                        <DisplayWarnings
+                            expenseWarning={expenseWarning}
+                            amountWarning={amountWarning}
+                            formatWarning={formatWarning} />
+                    </div>
+                    <div className="flex flex-col gap-2 w-full">
                         <button
-                            className="bg-blue-400 rounded py-2 px-4 cursor-pointer"
+                            className="bg-blue-400 hover:bg-blue-500 transition-colors duration-200 rounded py-4 px-8 cursor-pointer text-xl"
                             onClick={() => {
                                 expenseFormValidator();
                                 setShowWelcome(false);
@@ -153,7 +156,7 @@ export default function ExpenseForm({
                             Confirm
                         </button>
                         <button
-                            className="bg-red-400 rounded py-2 px-4 cursor-pointer"
+                            className="bg-red-400 hover:bg-red-500 transition-colors duration-200 rounded py-4 px-8 cursor-pointer text-xl"
                             onClick={() => {
                                 resetForm();
                                 setExpenseWarning(false);
@@ -167,16 +170,15 @@ export default function ExpenseForm({
             )
             }
             {view === "budget-form" && (
-                <div className="flex flex-col gap-4 items-center justify-center m-auto">
-                    <p className="text-center">Enter your budget. Make sure to only enter a plain number with a maximum two decimal places (no $ or negative numbers).</p>
-                    <div className="flex gap-4 items-center">
-                        <label htmlFor="budget-input">Enter your budget:</label>
+                <div className="flex flex-col items-center h-full w-full">
+                    <div className="flex flex-col gap-4 items-center h-full bg-gray-500 rounded w-full my-4 p-4 justify-center">
+                        <label className="text-xl text-white" htmlFor="budget-input">Enter your budget:</label>
                         <input
                             id="budget-input"
                             type="number"
                             step="0.01"
                             min="0"
-                            className="bg-white rounded min-w-0 py-1 px-2"
+                            className="bg-white rounded w-3/4 sm:w-1/2 py-2 px-4 text-xl"
                             placeholder="0.00"
                             value={budgetInput}
                             onChange={e => {
@@ -194,9 +196,9 @@ export default function ExpenseForm({
                         expenseWarning={expenseWarning}
                         amountWarning={amountWarning}
                         formatWarning={formatWarning} />
-                    <div className="flex gap-4 items-center">
+                    <div className="flex flex-col w-full gap-2">
                         <button
-                            className="bg-blue-400 rounded py-2 px-4 shadow cursor-pointer"
+                            className="bg-blue-400 hover:bg-blue-500 transition-colors duration-200 rounded py-4 px-8 shadow cursor-pointer text-xl"
                             onClick={() => {
                                 if (!budgetInput.trim()) {
                                     return setAmountWarning(true);
@@ -215,7 +217,7 @@ export default function ExpenseForm({
                             Confirm
                         </button>
                         <button
-                            className="bg-red-400 rounded py-2 px-4 shadow cursor-pointer"
+                            className="bg-red-400 hover:bg-red-500 transition-colors duration-200 rounded py-4 px-8 shadow cursor-pointer text-xl"
                             onClick={() => {
                                 setView("home");
                                 setBudgetInput("");

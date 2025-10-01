@@ -60,7 +60,16 @@ function App() {
     <div className="flex h-screen items-center justify-center">
       <div
         id="tracker-container"
-        className="flex flex-col bg-gray-400 w-full max-w-md h-3/4 mx-auto p-6 rounded-2xl shadow-xl"
+        className="
+    flex flex-col
+    bg-gray-400
+    w-full h-full     
+    sm:max-w-lg sm:h-[90%] 
+    mx-auto
+    p-4 sm:p-6            
+    rounded-none sm:rounded-2xl
+    shadow-none sm:shadow-2xl
+  "
       >
         <Header />
         <WelcomeMessage showWelcome={showWelcome} view={view} />
@@ -78,6 +87,26 @@ function App() {
           formatWarning={formatWarning}
           setFormatWarning={setFormatWarning}
         />
+        {(view === "home" && !showWelcome) && (
+          <div className={expenseArray.length > 0 || budget ? ("border-t-2 border-white flex items-center p-1 rounded-b gap-2 bg-gray-500") : ("flex items-center p-1 rounded-b gap-2 bg-gray-500")} >
+            {budget && (
+              <BudgetValue
+                budget={budget}
+                setBudget={setBudget}
+                view={view}
+                showWelcome={showWelcome}
+                expenseArray={expenseArray}
+              />
+            )}
+            {expenseArray.length > 0 && (
+              <TotalValue
+                expenseArray={expenseArray}
+                view={view}
+                showWelcome={showWelcome}
+              />
+            )}
+          </div>
+        )}
         <Forms
           view={view}
           setView={setView}
@@ -99,29 +128,14 @@ function App() {
           formatWarning={formatWarning}
           setFormatWarning={setFormatWarning}
         />
-        <div className="flex flex-col mt-auto">
-          <div className="flex items-center justify-between">
-            <BudgetValue
-              budget={budget}
-              setBudget={setBudget}
-              view={view}
-              showWelcome={showWelcome}
-              expenseArray={expenseArray}
-            />
-            <TotalValue
-              expenseArray={expenseArray}
-              view={view}
-              showWelcome={showWelcome}
-            />
-          </div>
-          <Buttons
-            view={view}
-            setView={setView}
-            showWelcome={showWelcome}
-            setShowWelcome={setShowWelcome}
-            budget={budget}
-          />
-        </div>
+        <Buttons
+          view={view}
+          setView={setView}
+          showWelcome={showWelcome}
+          setShowWelcome={setShowWelcome}
+          budget={budget}
+          setBudget={setBudget}
+        />
       </div>
     </div>
   );

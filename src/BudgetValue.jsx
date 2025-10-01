@@ -7,18 +7,13 @@ export default function BudgetValue({ budget, setBudget, view, showWelcome, expe
     return (
         <>
             {(budget && view === "home" && !showWelcome) && (
-                <div className="flex flex-row gap-4 items-center">
+                <div className={expenseArray.length > 0 ? ("flex flex-col justify-start gap-2 items-center w-1/2 border-r-2 border-white") : ("flex flex-1 justify-center items-center")}>
                     {total > budgetNum ? (
-                        <p className="text-red-700">Budget: {budget}</p>
+                        <p className="bg-red-500 text-white text-lg rounded py-1 px-1 hyphens-auto text-center">Budget: <span className="break-all">{budget}</span></p>
                     ) : (
-                        <p>Budget: {budget}</p>
+                        <p className="text-white text-lg hyphens-auto text-center">Budget: {budget}</p>
                     )
                     }
-                    <button
-                        className="bg-red-400 rounded cursor-pointer py-2 px-4"
-                        onClick={() => setBudget("")}>
-                        Delete
-                    </button>
                 </div>
             )
             }

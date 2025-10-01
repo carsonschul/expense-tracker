@@ -14,28 +14,38 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
     return (
         <>
             {(!showWelcome && view === "home") && (
-                <div className="flex flex-col flex-grow overflow-y-auto bg-gray-500 p-4 mb-4 rounded">
+                <div className="w-full h-full bg-gray-500 mt-4 rounded-t overflow-y-auto">
                     {expenseArray.length > 0 && (
-                        <ul className="flex flex-col">
+                        <div className="flex bg-gray-700 px-2 py-2 rounded-t">
+                            <p className="flex w-1/3 justify-center underline text-lg text-white">Expense</p>
+                            <p className="flex w-1/3 justify-center underline text-lg text-white">Amount</p>
+                            <p className="flex w-1/3 justify-center underline text-lg text-white">Options</p>
+                        </div>
+                    )}
+                    {expenseArray.length > 0 && (
+                        <ul className="flex flex-col overflow-y-auto">
                             {expenseArray.map((expense, i) => (
                                 <li
                                     key={i}
-                                    className={`flex flex-wrap gap-4 w-full mb-2 ${editingIndex === i ? "items-end" : "items-center"
-                                        }`}
+                                    className="px-2 py-2 flex odd:bg-gray-800 even:bg-gray-700"
                                 >
                                     {editingIndex !== i ? (
                                         <>
-                                            <span>{expense.label}</span>
-                                            <span>{expense.amount}</span>
+                                            <div className="flex justify-center w-1/3 items-center">
+                                                <span className="text-white text-lg hyphens-auto text-center">{expense.label}</span>
+                                            </div>
+                                            <div className="flex justify-center w-1/3 items-center ml-2">
+                                                <span className="text-white text-lg break-all text-center">{expense.amount}</span>
+                                            </div>
                                         </>
                                     ) :
-                                        <div className="flex gap-4 min-w-0">
-                                            <div className="flex flex-col min-w-0">
-                                                <label htmlFor="expense-input">Expense:</label>
+                                        <>
+                                            <div className="flex flex-col items-center w-1/3">
+                                                <label className="text-white text-lg" htmlFor="expense-input">Expense:</label>
                                                 <input
                                                     id="expense-input"
                                                     type="text"
-                                                    className="bg-white rounded py-1 px-2 mt-2"
+                                                    className="bg-white rounded py-1 px-2 mt-2 w-full"
                                                     placeholder="Banana"
                                                     value={editValues.label}
                                                     onChange={e => {
@@ -50,12 +60,12 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
                                                         }
                                                     }} />
                                             </div>
-                                            <div className="flex flex-col min-w-0">
-                                                <label htmlFor="amount-input">Amount:</label>
+                                            <div className="flex flex-col items-center w-1/3 mx-2">
+                                                <label className="text-white text-lg" htmlFor="amount-input">Amount:</label>
                                                 <input
                                                     id="amount-input"
                                                     type="number"
-                                                    className="bg-white rounded py-1 px-2 mt-2"
+                                                    className="bg-white rounded py-1 px-2 mt-2 w-full"
                                                     placeholder="0.00"
                                                     value={editValues.amount}
                                                     onChange={e => {
@@ -72,12 +82,12 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
                                                         }
                                                     }} />
                                             </div>
-                                        </div>
+                                        </>
                                     }
-                                    <div className="flex gap-4">
+                                    <div className="flex justify-center items-end w-1/3 gap-2 items-center ml-2 text-lg">
                                         {editingIndex !== i ? (
                                             <button
-                                                className="bg-green-400 rounded cursor-pointer py-2 px-4"
+                                                className="flex justify-center bg-green-400 hover:bg-green-500 transition-colors duration-200 rounded cursor-pointer text-black w-1/2 flex-shrink-0 py-3 px-3"
                                                 onClick={() => {
                                                     setEditingIndex(i);
                                                     setEditValues({
@@ -90,7 +100,7 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
                                             </button>
                                         ) : (
                                             <button
-                                                className="bg-blue-400 rounded cursor-pointer py-2 px-4"
+                                                className="flex justify-center bg-blue-400 hover:bg-blue-500 transition-colors duration-200 rounded cursor-pointer text-black w-1/2 flex-shrink-0 py-3 px-3"
                                                 onClick={() => {
 
                                                     let isError = false
@@ -127,7 +137,7 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
                                         }
                                         {editingIndex !== i ? (
                                             <button
-                                                className="bg-red-400 rounded cursor-pointer py-2 px-4"
+                                                className="flex justify-center bg-red-400 hover:bg-red-500 transition-colors duration-200 rounded cursor-pointer text-black w-1/2 flex-shrink-0 py-3 px-3"
                                                 onClick={() => {
                                                     setExpenseArray(prev => prev.filter((_, index) => index !== i))
                                                 }}>
@@ -135,7 +145,7 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
                                             </button>
                                         ) : (
                                             <button
-                                                className="bg-red-400 rounded cursor-pointer py-2 px-4"
+                                                className="flex justify-center bg-red-400 hover:bg-red-500 transition-colors duration-200 rounded cursor-pointer text-black w-1/2 flex-shrink-0 py-3 px-3"
                                                 onClick={() => {
                                                     setEditingIndex(null);
                                                     setExpenseWarning(false);
@@ -154,7 +164,7 @@ export default function ExpenseList({ expenseArray, setExpenseArray, showWelcome
             )
             }
             {view === "home" && (
-                <div className="pt-2">
+                <div>
                     <DisplayWarnings
                         expenseWarning={expenseWarning}
                         amountWarning={amountWarning}
